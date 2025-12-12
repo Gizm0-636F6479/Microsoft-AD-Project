@@ -35,7 +35,7 @@ ExampleCorp.com (Domain)
 # Active Directory Key-Terms
 
 * **Core Terms**
-    * Forest:	The topmost container; a collection of one or multiple Active Directory domains. Each forest operates independently and contains all AD objects.
+    * <b>Forest:</b>	The topmost container; a collection of one or multiple Active Directory domains. Each forest operates independently and contains all AD objects.
     * Domain:	A logical group of objects (computers, users, OUs, groups, etc.). Domains can operate independently or be connected via trust relationships.
     * Tree:	A collection of Active Directory domains that begins at a single root domain. All domains in a tree share a standard Global Catalog and a common namespace boundary.
     * Object:	ANY resource present within an Active Directory environment, such as OUs, printers, users, and domain controllers.
