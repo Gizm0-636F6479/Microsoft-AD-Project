@@ -162,3 +162,57 @@ Functional levels determine the features and capabilities available in AD, and w
 | Forest Level (2003) | Introduction of Forest Trust, Domain Renaming, and Read-Only Domain Controllers (RODC). |  |
 | Forest Level (2008 R2) | Active Directory Recycle Bin is introduced, allowing restoration of deleted objects while AD DS is running. |  |
 | Forest Level (2016) | Privileged Access Management (PAM) using Microsoft Identity Manager (MIM). |  |
+
+## Active Directory Core Communication Protocols
+
+Active Directory (AD) relies on a set of protocols for authentication, client-server communication, and directory lookups.
+
+| Protocol | Purpose in AD | Default Port(s) |
+| --- | --- | --- |
+| Kerberos | Primary protocol for domain account authentication; uses tickets for mutual authentication. | TCP/UDP 88 |
+| DNS | Essential for locating Domain Controllers and facilitating communication between systems in the domain. | TCP/UDP 53 |
+| LDAP | Protocol used by applications and systems to query and communicate with the Active Directory database (directory lookups). | TCP 389 (LDAP), TCP 636 (LDAPS/SSL) |
+| MSRPC | Microsoft's implementation of Remote Procedure Call, used for interprocess communication and accessing key AD services (various RPC endpoints). | Various (RPC endpoints) |
+
+### 1. Kerberos Authentication (The Ticket System)
+
+Kerberos uses tickets rather than repeatedly transmitting passwords. The Domain Controller hosts the Key Distribution Center (KDC), which issues tickets.
+ 
+| Step | Message | Description |
+| --- | --- | --- |
+| AS-REQ | Initial Login — AS-REQ (Authentication Service Request) | Client encrypts a timestamp with the user's password hash and sends it to the KDC. |
+| TGT | KDC Verification — TGT (Ticket Granting Ticket) | If verification succeeds, the KDC issues a TGT (encrypted with the `krbtgt` account key) and returns it to the client. |
+| TGS-REQ | Service Request — TGS-REQ (Ticket Granting Service Request) | The client presents the TGT to the KDC, requesting a service ticket for a specific network service. |
+| TGS | Service Ticket Issue — TGS (Ticket Granting Service Ticket) | KDC issues a service ticket (encrypted with the service account key) and returns it to the client. |
+| AP-REQ | Access Granted — AP-REQ (Application Request) | Client presents the service ticket to the target service; the service validates and grants access. |
+
+### 2. DNS (Domain Name System)
+
+AD DS uses DNS so clients can locate Domain Controllers and other services (SRV records). Dynamic DNS updates are common in AD environments.
+
+| Lookup | Command | Purpose |
+| --- | --- | --- |
+| Forward lookup | `nslookup DOMAIN.LOCAL` | Retrieves the IP address(es) of DCs for the domain. |
+| Reverse lookup | `nslookup 172.16.6.5` | Obtains the FQDN for an IP address. |
+| Host IP lookup | `nslookup HOSTNAME` | Finds the IP for a specific host name. |
+
+### 3. LDAP (Lightweight Directory Access Protocol)
+
+LDAP is used to query and manage directory data. The DC acts as the Directory System Agent listening for LDAP requests.
+
+| Authentication Type | Description | Port(s) |
+| --- | --- | --- |
+| Simple Authentication | Basic BIND using username/password (can be cleartext). Use LDAPS to encrypt the connection. | TCP 389 (LDAP), TCP 636 (LDAPS) |
+| SASL Authentication | Uses an external framework (for example Kerberos) to authenticate before binding, providing stronger security. | Negotiated over underlying transport |
+
+### 4. MSRPC (Microsoft Remote Procedure Call)
+
+MSRPC provides interprocess communication for Windows services and AD management. Key interfaces and relevance:
+
+| Interface | Purpose / Notes |
+| --- | --- |
+| lsarpc | Manages Local Security Authority (LSA) functions and domain security policy. |
+| netlogon | Background service used for authentication and Domain Controller location. |
+| samr | Remote SAM management (user/group info). Authenticated queries are allowed and can be used for reconnaissance. |
+| drsuapi | Directory Replication Service Remote Protocol — used for replication. If improperly secured, attackers can abuse replication to exfiltrate AD data (NTDS.dit). |
+
