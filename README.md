@@ -145,6 +145,7 @@ A trust establishes authentication between separate domains or forests, allowing
 | One-Way Trust |  | Users in a trusted domain can access resources in the trusting domain, but not vice-versa. |
 | Two-Way (Bidirectional) Trust |  | Users from both trusting domains can access resources in the other. |
 
+![alt text](image-1.png)
 ### Domain and Forest Functional Levels
 
 Functional levels determine the features and capabilities available in AD, and which Windows Server OS can run as a DC.
