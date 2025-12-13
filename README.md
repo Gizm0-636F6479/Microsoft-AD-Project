@@ -1,36 +1,36 @@
-# Active-Directory ReadMe
+﻿# Active-Directory ReadMe
 This repository serves as a personal knowledge base and learning log for mastering Active Directory (AD) concepts, exploitation, and defense techniques. The focus is on practical application within controlled lab environments, primarily using virtual machines through VMware and learning tracks through HTB.
 
 # Active Directory Structure Example
 
 ```text
 ExampleCorp.com (Domain)
-├── Built-in (Default Container)
-├── Computers (Default Container)
-├── Users (Default Container)
-└── Organizational Units (OUs - Custom Management Structure)
-    ├── Infrastructure
-    │   ├── Servers
-    │   │   ├── Production Servers
-    │   │   └── Test/Development Servers
-    │   └── Shared Assets
-    │       ├── Printers (Container)
-    │       └── Service Accounts (Container)
-    ├── Departments
-    │   ├── IT Services
-    │   │   ├── IT Support
-    │   │   ├── Network Operations
-    │   │   ├── Users (Container)
-    │   │   └── Computers (Container)
-    │   ├── Finance
-    │   │   ├── Users (Container)
-    │   │   └── Computers (Container)
-    │   └── Sales & Marketing
-    │       ├── Users (Container)
-    │       └── Computers (Container)
-    └── USA (Geographical OU)
-        ├── HQ - Atlanta
-        └── West Coast Offices
+ Built-in (Default Container)
+ Computers (Default Container)
+ Users (Default Container)
+ Organizational Units (OUs - Custom Management Structure)
+     Infrastructure
+        Servers
+           Production Servers
+           Test/Development Servers
+        Shared Assets
+            Printers (Container)
+            Service Accounts (Container)
+     Departments
+        IT Services
+           IT Support
+           Network Operations
+           Users (Container)
+           Computers (Container)
+        Finance
+           Users (Container)
+           Computers (Container)
+        Sales & Marketing
+            Users (Container)
+            Computers (Container)
+     USA (Geographical OU)
+         HQ - Atlanta
+         West Coast Offices
 ```
 
 # Active Directory Key Terms
@@ -109,3 +109,55 @@ ExampleCorp.com (Domain)
 - **Sites:** A set of computers across one or more subnets connected by high-speed links. Sites are used to make replication across domain controllers run efficiently.
 - **Built-in:** A container that holds default security groups (for example, Domain Admins and Administrators) that are created when an AD domain is provisioned.
 - **Foreign Security Principals (FSP):** A placeholder object created in the current AD forest to represent a security principal (user or group) that belongs to a trusted external forest; used to resolve names and SIDs across trusts.
+
+## Active Directory Infrastructure
+
+### 1. Flexible Single Master Operation (FSMO) Roles
+
+These five specialized roles are distributed among Domain Controllers (DCs) to ensure consistency and prevent conflicts across the domain or forest.
+
+| FSMO Role | Scope | Description |
+| --- | --- | --- |
+| Schema Master | Forest | Manages the single read/write copy of the AD schema, which defines all possible objects and attributes in the entire forest. |
+| Domain Naming Master | Forest | Manages domain names and ensures that two domains with the same name are not created within the same forest. |
+| Relative ID (RID) Master | Domain | Assigns unique blocks of Relative IDs (RIDs) to DCs within the domain. This ensures every new object receives a unique SID within that domain. |
+| PDC Emulator | Domain | The authoritative DC that handles authentication requests, processes password changes, manages Group Policy Objects (GPOs), and maintains time synchronization across the domain. |
+| Infrastructure Master | Domain | Translates GUIDs, SIDs, and DNs between domains. Critical in multi-domain forests to ensure references (like group membership from another domain) are correctly displayed. |
+
+### 2. Global Catalog and Replication
+
+- **Global Catalog (GC):** A Domain Controller that stores a full copy of all objects in its local domain and a partial copy of objects in every other domain in the forest; enables forest-wide searches.
+- **Replication:** The process where AD object updates are transferred between Domain Controllers, managed by the Knowledge Consistency Checker (KCC); ensures synchronization and resiliency.
+
+### Active Directory Trusts
+
+A trust establishes authentication between separate domains or forests, allowing users from one to access resources in the other.
+
+| Trust Type | Transitive? | Description |
+| --- | --- | --- |
+| Parent-Child | Two-way, Transitive | Automatically created between a parent domain and a new child domain within the same forest. |
+| Tree-Root | Two-way, Transitive | Automatically created between the forest root domain and a new root domain of a different tree in the same forest. |
+| Forest | Two-way, Transitive | A trust between two forest root domains, extending trust to every domain within both forests. |
+| External | Non-transitive | A trust between two separate domains in separate forests that are not joined by a forest trust. Often uses SID filtering. |
+| Cross-Link | Transitive | A trust between child domains to shorten the authentication path, speeding up access. |
+| Transitive Trust |  | Trust is extended to objects that the trusted domain trusts (e.g., if A trusts B, and B trusts C, then A trusts C). |
+| Non-Transitive Trust |  | Trust is limited only to the child domain itself, not extending to any other domains it may trust. |
+| One-Way Trust |  | Users in a trusted domain can access resources in the trusting domain, but not vice-versa. |
+| Two-Way (Bidirectional) Trust |  | Users from both trusting domains can access resources in the other. |
+
+### Domain and Forest Functional Levels
+
+Functional levels determine the features and capabilities available in AD, and which Windows Server OS can run as a DC.
+
+| Functional Level | Key Features Introduced | Supported DC Operating Systems (example) |
+| --- | --- | --- |
+| Windows 2000 native | Universal groups, group nesting, group conversion, SID history. | Windows Server 2000 through 2008 R2 |
+| Windows Server 2003 | lastLogonTimestamp, well-known containers, constrained delegation, selective authentication. | Windows Server 2003 through 2012 R2 |
+| Windows Server 2008 | DFS replication support, AES 128/256 for Kerberos, Fine-grained password policies. | Windows Server 2008 through 2012 R2 |
+| Windows Server 2008 R2 | Authentication mechanism assurance, Managed Service Accounts. | Windows Server 2008 R2 through 2012 R2 |
+| Windows Server 2012 | KDC support for claims, compound authentication, and Kerberos armoring. | Windows Server 2012, 2012 R2 |
+| Windows Server 2012 R2 | Extra protections for the Protected Users group, Authentication Policies/Silos. | Windows Server 2012 R2 |
+| Windows Server 2016 | Smart card required for interactive logon, new Kerberos features, new credential protection. | Windows Server 2016, 2019 |
+| Forest Level (2003) | Introduction of Forest Trust, Domain Renaming, and Read-Only Domain Controllers (RODC). |  |
+| Forest Level (2008 R2) | Active Directory Recycle Bin is introduced, allowing restoration of deleted objects while AD DS is running. |  |
+| Forest Level (2016) | Privileged Access Management (PAM) using Microsoft Identity Manager (MIM). |  |
