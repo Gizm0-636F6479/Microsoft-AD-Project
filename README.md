@@ -5,32 +5,32 @@ This repository serves as a personal knowledge base and learning log for masteri
 
 ```text
 ExampleCorp.com (Domain)
- Built-in (Default Container)
- Computers (Default Container)
- Users (Default Container)
- Organizational Units (OUs - Custom Management Structure)
-     Infrastructure
-        Servers
-           Production Servers
-           Test/Development Servers
-        Shared Assets
-            Printers (Container)
-            Service Accounts (Container)
-     Departments
-        IT Services
-           IT Support
-           Network Operations
-           Users (Container)
-           Computers (Container)
-        Finance
-           Users (Container)
-           Computers (Container)
-        Sales & Marketing
-            Users (Container)
-            Computers (Container)
-     USA (Geographical OU)
-         HQ - Atlanta
-         West Coast Offices
+├── Built-in (Default Container)
+├── Computers (Default Container)
+├── Users (Default Container)
+└── Organizational Units (OUs - Custom Management Structure)
+    ├── Infrastructure
+    │   ├── Servers
+    │   │   ├── Production Servers
+    │   │   └── Test/Development Servers
+    │   └── Shared Assets
+    │       ├── Printers (Container)
+    │       └── Service Accounts (Container)
+    ├── Departments
+    │   ├── IT Services
+    │   │   ├── IT Support
+    │   │   ├── Network Operations
+    │   │   ├── Users (Container)
+    │   │   └── Computers (Container)
+    │   ├── Finance
+    │   │   ├── Users (Container)
+    │   │   └── Computers (Container)
+    │   └── Sales & Marketing
+    │       ├── Users (Container)
+    │       └── Computers (Container)
+    └── USA (Geographical OU)
+        ├── HQ - Atlanta
+        └── West Coast Offices
 ```
 
 # Active Directory Key Terms
