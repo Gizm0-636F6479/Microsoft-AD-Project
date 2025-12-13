@@ -180,11 +180,11 @@ Kerberos uses tickets rather than repeatedly transmitting passwords. The Domain 
  
 | Step | Message | Description |
 | --- | --- | --- |
-| AS REQ | Initial Login — AS-REQ (Authentication Service Request) | Client encrypts a timestamp with the user's password hash and sends it to the KDC. |
+| AS REQ | Initial Login — AS-REQ (Authentication Service Request) | Client encrypts a timestamp with the user's password hash and sends it to the KDC. |
 | TGT | KDC Verification — TGT (Ticket Granting Ticket) | If verification succeeds, the KDC issues a TGT (encrypted with the `krbtgt` account key) and returns it to the client. |
-| TGS REQ | Service Request — TGS-REQ (Ticket Granting Service Request) | The client presents the TGT to the KDC, requesting a service ticket for a specific network service. |
+| TGS REQ | Service Request — TGS-REQ (Ticket Granting Service Request) | The client presents the TGT to the KDC, requesting a service ticket for a specific network service. |
 | TGS | Service Ticket Issue — TGS (Ticket Granting Service Ticket) | KDC issues a service ticket (encrypted with the service account key) and returns it to the client. |
-| AP REQ | Access Granted — AP-REQ (Application Request) | Client presents the service ticket to the target service; the service validates and grants access. |
+| AP REQ | Access Granted — AP-REQ (Application Request) | Client presents the service ticket to the target service; the service validates and grants access. |
 
 ### 2. DNS (Domain Name System)
 
