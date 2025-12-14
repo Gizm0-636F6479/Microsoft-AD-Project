@@ -186,6 +186,8 @@ Kerberos uses tickets rather than repeatedly transmitting passwords. The Domain 
 | TGS | Service Ticket Issue — TGS (Ticket Granting Service Ticket) | KDC issues a service ticket (encrypted with the service account key) and returns it to the client. |
 | AP REQ | Access Granted — AP-REQ (Application Request) | Client presents the service ticket to the target service; the service validates and grants access. |
 
+![alt text](image-2.png)
+
 ### 2. DNS (Domain Name System)
 
 AD DS uses DNS so clients can locate Domain Controllers and other services (SRV records). Dynamic DNS updates are common in AD environments.
@@ -196,6 +198,8 @@ AD DS uses DNS so clients can locate Domain Controllers and other services (SRV 
 | Reverse lookup | `nslookup 172.16.6.5` | Obtains the FQDN for an IP address. |
 | Host IP lookup | `nslookup HOSTNAME` | Finds the IP for a specific host name. |
 
+![alt text](image-3.png)
+
 ### 3. LDAP (Lightweight Directory Access Protocol)
 
 LDAP is used to query and manage directory data. The DC acts as the Directory System Agent listening for LDAP requests.
@@ -204,6 +208,8 @@ LDAP is used to query and manage directory data. The DC acts as the Directory Sy
 | --- | --- | --- |
 | Simple Authentication | Basic BIND using username/password (can be cleartext). Use LDAPS to encrypt the connection. | TCP 389 (LDAP), TCP 636 (LDAPS) |
 | SASL Authentication | Uses an external framework (for example Kerberos) to authenticate before binding, providing stronger security. | Negotiated over underlying transport |
+
+![alt text](image-4.png)
 
 ### 4. MSRPC (Microsoft Remote Procedure Call)
 
