@@ -244,7 +244,7 @@ Active Directory supports several hash and protocol versions, with NTLM being th
     - Limited to a maximum of 14 characters.
     - The password is split into two 7-character chunks, allowing an attacker to brute force the shorter chunks separately.
     - It does not use a salt.
-    
+
 Example Format:
 ```
 299bd128c1101fd6
@@ -261,7 +261,8 @@ The NTHash is the modern password hash used on Windows systems and is utilized w
     - Vulnerable to Pass-the-Hash (PtH) attacks, where an attacker can authenticate using only the hash without the cleartext password.
     - Susceptible to offline brute-force and dictionary attacks for short/weak passwords.
 
-NTLM Authentication Flow: Three messages — `NEGOTIATE_MESSAGE` (Client→Server), `CHALLENGE_MESSAGE` (Server→Client), `AUTHENTICATE_MESSAGE` (Client→Server).
+NTLM Authentication Flow:
+![alt text](image-5.png)
 
 Example Full NTLM Hash Breakdown:
 
