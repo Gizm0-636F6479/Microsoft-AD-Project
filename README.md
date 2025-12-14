@@ -10,24 +10,24 @@ ExampleCorp.com (Domain)
 +-- Users (Default Container)
 +-- Organizational Units (OUs - Custom Management Structure)
     +-- Infrastructure
-    ¦   +-- Servers
-    ¦   ¦   +-- Production Servers
-    ¦   ¦   +-- Test/Development Servers
-    ¦   +-- Shared Assets
-    ¦       +-- Printers (Container)
-    ¦       +-- Service Accounts (Container)
+    ï¿½   +-- Servers
+    ï¿½   ï¿½   +-- Production Servers
+    ï¿½   ï¿½   +-- Test/Development Servers
+    ï¿½   +-- Shared Assets
+    ï¿½       +-- Printers (Container)
+    ï¿½       +-- Service Accounts (Container)
     +-- Departments
-    ¦   +-- IT Services
-    ¦   ¦   +-- IT Support
-    ¦   ¦   +-- Network Operations
-    ¦   ¦   +-- Users (Container)
-    ¦   ¦   +-- Computers (Container)
-    ¦   +-- Finance
-    ¦   ¦   +-- Users (Container)
-    ¦   ¦   +-- Computers (Container)
-    ¦   +-- Sales & Marketing
-    ¦       +-- Users (Container)
-    ¦       +-- Computers (Container)
+    ï¿½   +-- IT Services
+    ï¿½   ï¿½   +-- IT Support
+    ï¿½   ï¿½   +-- Network Operations
+    ï¿½   ï¿½   +-- Users (Container)
+    ï¿½   ï¿½   +-- Computers (Container)
+    ï¿½   +-- Finance
+    ï¿½   ï¿½   +-- Users (Container)
+    ï¿½   ï¿½   +-- Computers (Container)
+    ï¿½   +-- Sales & Marketing
+    ï¿½       +-- Users (Container)
+    ï¿½       +-- Computers (Container)
     +-- USA (Geographical OU)
         +-- HQ - Atlanta
         +-- West Coast Offices
@@ -180,11 +180,11 @@ Kerberos uses tickets rather than repeatedly transmitting passwords. The Domain 
  
 | Step | Message | Description |
 | --- | --- | --- |
-| AS REQ | Initial Login — AS-REQ (Authentication Service Request) | Client encrypts a timestamp with the user's password hash and sends it to the KDC. |
-| TGT | KDC Verification — TGT (Ticket Granting Ticket) | If verification succeeds, the KDC issues a TGT (encrypted with the `krbtgt` account key) and returns it to the client. |
-| TGS REQ | Service Request — TGS-REQ (Ticket Granting Service Request) | The client presents the TGT to the KDC, requesting a service ticket for a specific network service. |
-| TGS | Service Ticket Issue — TGS (Ticket Granting Service Ticket) | KDC issues a service ticket (encrypted with the service account key) and returns it to the client. |
-| AP REQ | Access Granted — AP-REQ (Application Request) | Client presents the service ticket to the target service; the service validates and grants access. |
+| AS REQ | Initial Login ï¿½ AS-REQ (Authentication Service Request) | Client encrypts a timestamp with the user's password hash and sends it to the KDC. |
+| TGT | KDC Verification ï¿½ TGT (Ticket Granting Ticket) | If verification succeeds, the KDC issues a TGT (encrypted with the `krbtgt` account key) and returns it to the client. |
+| TGS REQ | Service Request ï¿½ TGS-REQ (Ticket Granting Service Request) | The client presents the TGT to the KDC, requesting a service ticket for a specific network service. |
+| TGS | Service Ticket Issue ï¿½ TGS (Ticket Granting Service Ticket) | KDC issues a service ticket (encrypted with the service account key) and returns it to the client. |
+| AP REQ | Access Granted ï¿½ AP-REQ (Application Request) | Client presents the service ticket to the target service; the service validates and grants access. |
 
 ![alt text](images/image-2.png)
 
@@ -220,7 +220,7 @@ MSRPC provides interprocess communication for Windows services and AD management
 | lsarpc | Manages Local Security Authority (LSA) functions and domain security policy. |
 | netlogon | Background service used for authentication and Domain Controller location. |
 | samr | Remote SAM management (user/group info). Authenticated queries are allowed and can be used for reconnaissance. |
-| drsuapi | Directory Replication Service Remote Protocol — used for replication. If improperly secured, attackers can abuse replication to exfiltrate AD data (NTDS.dit). |
+| drsuapi | Directory Replication Service Remote Protocol ï¿½ used for replication. If improperly secured, attackers can abuse replication to exfiltrate AD data (NTDS.dit). |
  
 ## NTLM Authentication and Password Hashes
 
@@ -252,7 +252,7 @@ Example Format:
 
 ### 2. NTHash (NTLM Hash) and Protocol
 
-The NTHash is the modern password hash used on Windows systems and is utilized within the NTLM authentication protocol (a challenge–response system).
+The NTHash is the modern password hash used on Windows systems and is utilized within the NTLM authentication protocol (a challengeï¿½response system).
 
 - Hash Algorithm: MD4 of the little-endian UTF-16 value of the password: `MD4(UTF-16-LE(password))`.
 - Strengths: Supports the entire Unicode character set.
@@ -426,6 +426,61 @@ Example: User `DCorner` is a member of the `Help Desk` group, and `Help Desk` is
 | memberOf | A listing of all groups that contain this group as a member (shows nested group relationships). |
 | objectSid | The unique Security Identifier (SID) of the group, used to identify it as a security principal. |
 | groupType | An integer that specifies the group type (Security/Distribution) and scope (DomainLocal/Global/Universal). |
+
+## Rights vs. Privileges in Active Directory
+
+It is crucial to distinguish between rights and privileges:
+
+- **Rights (Access Rights):** Permissions to access an object (for example, read, write, or modify permissions on a file or folder).
+- **Privileges (User Rights Assignment):** Permissions to perform an action (for example, log on locally, shut down the system, reset a password, or debug a process). Windows calls these *User Rights Assignment*.
+
+### 1. High-Value Built-in Active Directory Groups
+
+Active Directory is pre-populated with security groups, many of which grant high-level rights and privileges. Membership should be strictly monitored.
+
+| Group Name | Group Scope | Description & Security Relevance |
+| --- | --- | --- |
+| Enterprise Admins | Universal | Provides complete configuration access across the entire AD forest. Exists only in the forest root domain; membership is extremely high-value. |
+| Schema Admins | Universal | Members can modify the AD schema (forest-wide control). Exists only in the forest root domain. |
+| Domain Admins | Global | Full access to administer the domain and is a member of local `Administrators` on all domain-joined machines. |
+| Administrators | DomainLocal | Full and unrestricted access to the computer or entire domain if on a Domain Controller. |
+| Backup Operators | DomainLocal | Can back up and restore files regardless of ACLs; may read shadow copies and access sensitive data. |
+| Server Operators | DomainLocal | Can manage services, access SMB shares, and perform server backups on DCs. |
+| Account Operators | DomainLocal | Can create/modify many account types but cannot manage administrative accounts or high-value group membership. |
+| DnsAdmins | Varies | Can modify DNS records; if DNS runs on a DC this can be highly exploitable. |
+| Hyper-V Administrators | DomainLocal | Complete Hyper-V control; if virtual DCs exist, treat as equivalent to Domain Admins. |
+| Preâ€“Windows 2000 Compatible Access | DomainLocal | Legacy group; misconfiguration can expose AD information to unauthenticated users. |
+| Protected Users | Global | Provides protections against certain credential theft techniques; use for high-risk accounts. |
+
+**Group Scope Comparison (example PowerShell output):**
+
+| Group Name | GroupCategory | GroupScope | Members |
+| --- | --- | --- | --- |
+| Server Operators | Security | DomainLocal | {} (No members by default) |
+| Domain Admins | Security | Global | {CN=htb-student_adm, ...} (Contains admin/service accounts) |
+
+### 2. High-Value Abusable Privileges (User Rights Assignment)
+
+These privileges grant powerful capabilities often abused for privilege escalation and credential theft.
+
+| Privilege Name | Description | Attack Context |
+| --- | --- | --- |
+| SeDebugPrivilege | Allows debugging and adjusting memory of processes. | Used with tools like Mimikatz to read LSASS memory and extract credentials. |
+| SeImpersonatePrivilege | Allows impersonation of security tokens (including SYSTEM). | Leveraged by JuicyPotato, RogueWinRM, PrintSpoofer for local privilege escalation. |
+| SeBackupPrivilege | Grants ability to back up files regardless of permissions. | Can be used to copy SAM/SYSTEM or `NTDS.dit` for offline credential extraction. |
+| SeTakeOwnershipPrivilege | Allows taking ownership of objects. | Used to gain access to files/share data by taking ownership then changing ACLs. |
+| SeLoadDriverPrivilege | Allows loading/unloading kernel drivers. | Can enable malicious drivers for persistence or privilege escalation. |
+
+**Privilege Display Example (`whoami /priv`):**
+
+Privilege listings depend on UAC and elevation state. A Domain Admin running a non-elevated session will not show full enabled privileges; an elevated session reveals the complete set (Enabled/Disabled as applicable).
+
+| Privilege Status | SeDebugPrivilege | SeImpersonatePrivilege |
+| --- | --- | --- |
+| Standard Domain User | Disabled (not listed) | Disabled (not listed) |
+| Domain Admin (Non-Elevated) | Disabled (not listed) | Disabled (not listed) |
+| Domain Admin (Elevated) | Enabled | Enabled |
+
 
 
 
