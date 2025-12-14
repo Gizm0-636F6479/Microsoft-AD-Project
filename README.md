@@ -1,36 +1,36 @@
-﻿# Active-Directory ReadMe
+# Active-Directory ReadMe
 This repository serves as a personal knowledge base and learning log for mastering Active Directory (AD) concepts, exploitation, and defense techniques. The focus is on practical application within controlled lab environments, primarily using virtual machines through VMware and learning tracks through HTB.
 
 # Active Directory Structure Example
 
 ```text
 ExampleCorp.com (Domain)
-├── Built-in (Default Container)
-├── Computers (Default Container)
-├── Users (Default Container)
-└── Organizational Units (OUs - Custom Management Structure)
-    ├── Infrastructure
-    │   ├── Servers
-    │   │   ├── Production Servers
-    │   │   └── Test/Development Servers
-    │   └── Shared Assets
-    │       ├── Printers (Container)
-    │       └── Service Accounts (Container)
-    ├── Departments
-    │   ├── IT Services
-    │   │   ├── IT Support
-    │   │   ├── Network Operations
-    │   │   ├── Users (Container)
-    │   │   └── Computers (Container)
-    │   ├── Finance
-    │   │   ├── Users (Container)
-    │   │   └── Computers (Container)
-    │   └── Sales & Marketing
-    │       ├── Users (Container)
-    │       └── Computers (Container)
-    └── USA (Geographical OU)
-        ├── HQ - Atlanta
-        └── West Coast Offices
++-- Built-in (Default Container)
++-- Computers (Default Container)
++-- Users (Default Container)
++-- Organizational Units (OUs - Custom Management Structure)
+    +-- Infrastructure
+    �   +-- Servers
+    �   �   +-- Production Servers
+    �   �   +-- Test/Development Servers
+    �   +-- Shared Assets
+    �       +-- Printers (Container)
+    �       +-- Service Accounts (Container)
+    +-- Departments
+    �   +-- IT Services
+    �   �   +-- IT Support
+    �   �   +-- Network Operations
+    �   �   +-- Users (Container)
+    �   �   +-- Computers (Container)
+    �   +-- Finance
+    �   �   +-- Users (Container)
+    �   �   +-- Computers (Container)
+    �   +-- Sales & Marketing
+    �       +-- Users (Container)
+    �       +-- Computers (Container)
+    +-- USA (Geographical OU)
+        +-- HQ - Atlanta
+        +-- West Coast Offices
 ```
 
 # Active Directory Key Terms
@@ -88,7 +88,7 @@ ExampleCorp.com (Domain)
 - **MSBROWSE:** A largely obsolete Microsoft networking protocol used in older Windows LANs to provide browsing services and maintain a list of available resources.
 
 # Active Directory Objects
-![Active Directory objects diagram](image.png)
+![Active Directory objects diagram](images/image.png)
 
 ## Leaf Objects (Cannot contain other objects)
 
@@ -145,7 +145,7 @@ A trust establishes authentication between separate domains or forests, allowing
 | One-Way Trust |  | Users in a trusted domain can access resources in the trusting domain, but not vice-versa. |
 | Two-Way (Bidirectional) Trust |  | Users from both trusting domains can access resources in the other. |
 
-![alt text](image-1.png)
+![alt text](images/image-1.png)
 ### Domain and Forest Functional Levels
 
 Functional levels determine the features and capabilities available in AD, and which Windows Server OS can run as a DC.
@@ -180,13 +180,13 @@ Kerberos uses tickets rather than repeatedly transmitting passwords. The Domain 
  
 | Step | Message | Description |
 | --- | --- | --- |
-| AS REQ | Initial Login — AS-REQ (Authentication Service Request) | Client encrypts a timestamp with the user's password hash and sends it to the KDC. |
-| TGT | KDC Verification — TGT (Ticket Granting Ticket) | If verification succeeds, the KDC issues a TGT (encrypted with the `krbtgt` account key) and returns it to the client. |
-| TGS REQ | Service Request — TGS-REQ (Ticket Granting Service Request) | The client presents the TGT to the KDC, requesting a service ticket for a specific network service. |
-| TGS | Service Ticket Issue — TGS (Ticket Granting Service Ticket) | KDC issues a service ticket (encrypted with the service account key) and returns it to the client. |
-| AP REQ | Access Granted — AP-REQ (Application Request) | Client presents the service ticket to the target service; the service validates and grants access. |
+| AS REQ | Initial Login � AS-REQ (Authentication Service Request) | Client encrypts a timestamp with the user's password hash and sends it to the KDC. |
+| TGT | KDC Verification � TGT (Ticket Granting Ticket) | If verification succeeds, the KDC issues a TGT (encrypted with the `krbtgt` account key) and returns it to the client. |
+| TGS REQ | Service Request � TGS-REQ (Ticket Granting Service Request) | The client presents the TGT to the KDC, requesting a service ticket for a specific network service. |
+| TGS | Service Ticket Issue � TGS (Ticket Granting Service Ticket) | KDC issues a service ticket (encrypted with the service account key) and returns it to the client. |
+| AP REQ | Access Granted � AP-REQ (Application Request) | Client presents the service ticket to the target service; the service validates and grants access. |
 
-![alt text](image-2.png)
+![alt text](images/image-2.png)
 
 ### 2. DNS (Domain Name System)
 
@@ -198,7 +198,7 @@ AD DS uses DNS so clients can locate Domain Controllers and other services (SRV 
 | Reverse lookup | `nslookup 172.16.6.5` | Obtains the FQDN for an IP address. |
 | Host IP lookup | `nslookup HOSTNAME` | Finds the IP for a specific host name. |
 
-![alt text](image-3.png)
+![alt text](images/image-3.png)
 
 ### 3. LDAP (Lightweight Directory Access Protocol)
 
@@ -209,7 +209,7 @@ LDAP is used to query and manage directory data. The DC acts as the Directory Sy
 | Simple Authentication | Basic BIND using username/password (can be cleartext). Use LDAPS to encrypt the connection. | TCP 389 (LDAP), TCP 636 (LDAPS) |
 | SASL Authentication | Uses an external framework (for example Kerberos) to authenticate before binding, providing stronger security. | Negotiated over underlying transport |
 
-![alt text](image-4.png)
+![alt text](images/image-4.png)
 
 ### 4. MSRPC (Microsoft Remote Procedure Call)
 
@@ -220,7 +220,7 @@ MSRPC provides interprocess communication for Windows services and AD management
 | lsarpc | Manages Local Security Authority (LSA) functions and domain security policy. |
 | netlogon | Background service used for authentication and Domain Controller location. |
 | samr | Remote SAM management (user/group info). Authenticated queries are allowed and can be used for reconnaissance. |
-| drsuapi | Directory Replication Service Remote Protocol — used for replication. If improperly secured, attackers can abuse replication to exfiltrate AD data (NTDS.dit). |
+| drsuapi | Directory Replication Service Remote Protocol � used for replication. If improperly secured, attackers can abuse replication to exfiltrate AD data (NTDS.dit). |
  
 ## NTLM Authentication and Password Hashes
 
@@ -252,7 +252,7 @@ Example Format:
 
 ### 2. NTHash (NTLM Hash) and Protocol
 
-The NTHash is the modern password hash used on Windows systems and is utilized within the NTLM authentication protocol (a challenge–response system).
+The NTHash is the modern password hash used on Windows systems and is utilized within the NTLM authentication protocol (a challenge�response system).
 
 - Hash Algorithm: MD4 of the little-endian UTF-16 value of the password: `MD4(UTF-16-LE(password))`.
 - Strengths: Supports the entire Unicode character set.
@@ -262,7 +262,7 @@ The NTHash is the modern password hash used on Windows systems and is utilized w
     - Susceptible to offline brute-force and dictionary attacks for short/weak passwords.
 
 NTLM Authentication Flow:
-![alt text](image-5.png)
+![alt text](images/image-5.png)
 
 Example Full NTLM Hash Breakdown:
 
@@ -339,7 +339,7 @@ These attributes uniquely identify and help manage user objects in Active Direct
 | objectSID | The user's Security Identifier used during security checks. | S-1-5-21-3842939050-3880317879...-1111 |
 | sIDHistory | Contains previous SIDs for the user object (used during migrations). | List of old SIDs |
 
-![alt text](image-6.png)
+![alt text](images/image-6.png)
 
 ### 5. Machine Accounts (Domain-Joined vs. Workgroup)
 
@@ -384,12 +384,12 @@ The group scope defines where a group can be used to grant permissions (domain r
 
 Group scopes can be changed, but there are a few caveats:
 
-- **Global → Universal:** A Global Group can only be converted to a Universal Group if it is NOT a member of any other Global Group.
-- **Domain Local → Universal:** A Domain Local Group can only be converted to a Universal Group if it does NOT contain any other Domain Local Groups as members.
-- **Universal → Domain Local:** A Universal Group can be converted to a Domain Local Group without restrictions.
-- **Universal → Global:** A Universal Group can only be converted to a Global Group if it does NOT contain any other Universal Groups as members.
+- **Global ? Universal:** A Global Group can only be converted to a Universal Group if it is NOT a member of any other Global Group.
+- **Domain Local ? Universal:** A Domain Local Group can only be converted to a Universal Group if it does NOT contain any other Domain Local Groups as members.
+- **Universal ? Domain Local:** A Universal Group can be converted to a Domain Local Group without restrictions.
+- **Universal ? Global:** A Universal Group can only be converted to a Global Group if it does NOT contain any other Universal Groups as members.
 
-![alt text](image-9.png)
+![alt text](images/image-9.png)
 
 ### Built-in Groups and Scope Examples
 
@@ -402,7 +402,7 @@ Group scopes can be changed, but there are a few caveats:
 | Enterprise Admins | Universal | Grants control over the entire AD forest (forest-wide control). |
 
 
-![alt text](image-8.png)
+![alt text](images/image-8.png)
 
 ### 3. Nested Group Membership
 
@@ -415,7 +415,7 @@ Nested group membership is when a group is a member of another group (e.g., Grou
 Example: User `DCorner` is a member of the `Help Desk` group, and `Help Desk` is a member of `Helpdesk Level 1`. `DCorner` inherits the privileges of `Helpdesk Level 1`, such as GenericWrite access to the `Tier 1 Admins` group.
 
 ### Bloodhound example
-![alt text](image-7.png)
+![alt text](images/image-7.png)
 
 ### 4. Important Group Attributes
 
@@ -426,5 +426,6 @@ Example: User `DCorner` is a member of the `Help Desk` group, and `Help Desk` is
 | memberOf | A listing of all groups that contain this group as a member (shows nested group relationships). |
 | objectSid | The unique Security Identifier (SID) of the group, used to identify it as a security principal. |
 | groupType | An integer that specifies the group type (Security/Distribution) and scope (DomainLocal/Global/Universal). |
+
 
 
