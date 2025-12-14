@@ -481,6 +481,53 @@ Privilege listings depend on UAC and elevation state. A Domain Admin running a n
 | Domain Admin (Non-Elevated) | Disabled (not listed) | Disabled (not listed) |
 | Domain Admin (Elevated) | Enabled | Enabled |
 
+## Security in Active Directory: Hardening Measures
+
+Active Directory (AD) is designed for Availability and Confidentiality, which, by nature, can make it insecure by default without proper hardening. Achieving a strong security posture involves implementing defense-in-depth measures using Microsoft's built-in features.
+
+### General Active Directory Hardening Measures
+
+| Measure | Tool / Feature | Description & Security Benefit |
+| --- | --- | --- |
+| Local Admin Password Mgmt. | Microsoft LAPS | Randomizes and rotates local administrator passwords on all domain-joined hosts, preventing lateral movement using the same default local credential. |
+| Service Account Security | Group Managed Service Accounts (gMSA) | Provides centrally managed service accounts with automatically generated, 120-character passwords that are rotated regularly. Eliminates the need for users to know or store service account passwords. |
+| Account Separation | Administrative Accounts | Requires administrators to use a separate, non-privileged account (suser) for day-to-day work and a highly-privileged account (suser_adm) only for administrative tasks on secure hosts. |
+| Account Auditing | Periodical Audits | Periodically audit and remove or disable stale users and objects (especially privileged service accounts) to reduce the attack surface. |
+| Role Separation | Limiting Server Roles | Do not install additional roles (e.g., IIS, Exchange, SQL) on Domain Controllers. Install roles on separate hosts to limit the attack surface and contain the impact of compromise. |
+
+### Password and Authentication Hardening
+
+| Measure | Best Practice / Requirement | Security Benefit |
+| --- | --- | --- |
+| Password Complexity | Passphrases & Minimum Length | Use a minimum length of 12 characters (longer for admins/services). Utilize a password filter to block common words (welcome, password, company name) susceptible to password spraying. |
+| Multi-Factor Authentication (MFA) | Required for Remote Access | Implement MFA for Remote Desktop Access (RDP) to limit lateral movement attempts, even if an attacker compromises a valid credential. |
+| Admin Account Usage | Restricted Logons | Limit Domain Admin account usage to only log in to Domain Controllers. This ensures their high-value password hashes are not left in memory on less secure workstations or servers. |
+
+### Policy and Group Management
+
+Group Policy Objects (GPOs) are essential for applying granular security settings across the domain.
+
+| Policy / Group Feature | Configuration Detail | Security Benefit |
+| --- | --- | --- |
+| Group Policy Objects (GPOs) | Account, Local, and Audit Policies | Centrally manage password complexity, account lockout settings, User Rights Assignments (privileges), and network access controls. |
+| Restricted Groups | GPO Configuration | Used to enforce tight control over group membership, such as ensuring only approved accounts are members of the local Administrators group or the high-value Enterprise Admins group. |
+| Security Groups | Granular Permissions | Used to assign granular rights en masse. Audit permissions periodically (especially local admin rights and RDP rights) to ensure users only have the access strictly required for their job. |
+| Application Control | AppLocker / Software Restriction | Restrict which software, scripts, or executables (e.g., CMD, PowerShell) non-essential users can run on a host to limit attack capabilities. |
+
+### Logging and Monitoring
+
+Effective logging is the foundation of detection and response.
+
+| Area | Configuration / Tool | Purpose |
+| --- | --- | --- |
+| Audit Policy Settings | Advanced Audit Policy Configuration | Enable robust logging for activities such as account logon/logoff, privilege usage, file access/modification, and policy changes. |
+| Monitoring & Detection | SIEM / Rules | Use centralized logging and rules to detect anomalous activity (e.g., mass failed login attempts, unauthorized object modifications) and indicators of attack (IoAs) like Kerberoasting attempts. |
+
+### Update Management
+
+| Area | Tool | Purpose |
+| --- | --- | --- |
+| Patch Management | WSUS or SCCM | Automate and ensure the timely deployment of critical security patches across all Windows systems to eliminate known vulnerabilities. |
 
 
 
