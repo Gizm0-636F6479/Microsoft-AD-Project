@@ -353,3 +353,70 @@ Computers are security principals themselves; their configuration determines man
 **Security Note:** In an AD environment, a machine account (which operates with `NT AUTHORITY\\SYSTEM` on that host) can have broad local rights and often has read access to much of the domain. Compromise of a machine account or local admin access is a common attacker foothold.
 
 
+## Active Directory Groups
+
+Groups are crucial objects in Active Directory (AD) used to efficiently manage permissions and access to resources for a collection of users and computers.
+
+| Concept | Purpose | Contrast with OUs |
+| --- | --- | --- |
+| Groups | Primarily used to assign permissions and rights to resources (e.g., file shares, printers). Members inherit the group's privileges. | Organizational Units (OUs) are used for management, organization, and deploying Group Policy settings to a collection of objects. OUs can also delegate administrative tasks. |
+
+**Attack Relevance:** Groups are a key target for attackers, as they may grant excessive or unintended privileges through direct membership or nested group membership.
+
+### 1. Group Types
+
+Every group in Active Directory must be assigned one of two types, which defines its fundamental purpose.
+
+| Group Type | Primary Purpose | Can Assign Permissions? |
+| --- | --- | --- |
+| Security Group | Used for assigning permissions and rights to a collection of users and other objects. Simplifies permission management and reduces overhead. | Yes (Inherited by all members) |
+| Distribution Group | Used by applications (e.g., Microsoft Exchange) for distributing messages (mailing lists). | No |
+
+### 2. Group Scopes
+
+The group scope defines where a group can be used to grant permissions (domain resources) and what objects it can contain as members.
+
+| Scope | Can Manage Resources in... | Can Contain Members from... | Storage Location | Key Rule |
+| --- | --- | --- | --- | --- |
+| Domain Local | Only the domain where it was created. | Any domain in the forest. | Local Domain | Often used to manage permissions on domain resources. |
+| Global | Any domain in the forest (to grant access to resources). | Only the domain where it was created. | Local Domain | Often contains users and other Global Groups from the same domain. |
+| Universal | Any object in the entire forest. | Any domain in the forest. | Global Catalog (GC) | Changes trigger forest-wide replication, so it's best practice to contain Global Groups, not individual users. |
+
+![alt text](image-9.png)
+
+### Built-in Groups and Scope Examples
+
+| Built-in Group Name | Group Scope | Example Purpose/Context |
+| --- | --- | --- |
+| Administrators | DomainLocal | Used to grant high-level permissions within the local domain. |
+| Domain Admins | Global | Contains all users designated as administrators in the domain. |
+| Domain Users | Global | Default group for all user accounts in the domain. |
+| Schema Admins | Universal | Grants control over the AD Schema (forest-wide control). |
+| Enterprise Admins | Universal | Grants control over the entire AD forest (forest-wide control). |
+
+![alt text](image-8.png)
+
+### 3. Nested Group Membership
+
+Nested group membership is when a group is a member of another group (e.g., Group A is a member of Group B).
+
+- Impact: This allows a user to inherit privileges indirectly from the groups their primary group is a member of.
+- Security Risk: Nested membership can lead to unintended privileges being granted to users, making access rights difficult to audit and track.
+- Analysis: Tools like BloodHound are essential for penetration testers and administrators to visually map and uncover these complex, inherited privileges.
+
+Example: User `DCorner` is a member of the `Help Desk` group, and `Help Desk` is a member of `Helpdesk Level 1`. `DCorner` inherits the privileges of `Helpdesk Level 1`, such as GenericWrite access to the `Tier 1 Admins` group.
+
+### Bloodhound example
+![alt text](image-7.png)
+
+### 4. Important Group Attributes
+
+| Attribute Name | Description |
+| --- | --- |
+| cn | Common-Name (The display name of the group). |
+| member | A listing of all user, group, and contact objects that are members of this group. |
+| memberOf | A listing of all groups that contain this group as a member (shows nested group relationships). |
+| objectSid | The unique Security Identifier (SID) of the group, used to identify it as a security principal. |
+| groupType | An integer that specifies the group type (Security/Distribution) and scope (DomainLocal/Global/Universal). |
+
+
