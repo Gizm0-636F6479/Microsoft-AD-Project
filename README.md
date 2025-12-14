@@ -244,6 +244,7 @@ Active Directory supports several hash and protocol versions, with NTLM being th
     - Limited to a maximum of 14 characters.
     - The password is split into two 7-character chunks, allowing an attacker to brute force the shorter chunks separately.
     - It does not use a salt.
+    
 Example Format:
 ```
 299bd128c1101fd6
