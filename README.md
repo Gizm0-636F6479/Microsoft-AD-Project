@@ -4,33 +4,33 @@ This repository serves as a personal knowledge base and learning log for masteri
 # Active Directory Structure Example
 
 ```text
-ExampleCorp.com (Domain)
-+-- Built-in (Default Container)
-+-- Computers (Default Container)
-+-- Users (Default Container)
-+-- Organizational Units (OUs - Custom Management Structure)
-    +-- Infrastructure
-    �   +-- Servers
-    �   �   +-- Production Servers
-    �   �   +-- Test/Development Servers
-    �   +-- Shared Assets
-    �       +-- Printers (Container)
-    �       +-- Service Accounts (Container)
-    +-- Departments
-    �   +-- IT Services
-    �   �   +-- IT Support
-    �   �   +-- Network Operations
-    �   �   +-- Users (Container)
-    �   �   +-- Computers (Container)
-    �   +-- Finance
-    �   �   +-- Users (Container)
-    �   �   +-- Computers (Container)
-    �   +-- Sales & Marketing
-    �       +-- Users (Container)
-    �       +-- Computers (Container)
-    +-- USA (Geographical OU)
-        +-- HQ - Atlanta
-        +-- West Coast Offices
+ExampleCorp.com (Domain Root)
+├── Built-in (Default Container)
+├── Computers (Default Container)
+├── Users (Default Container)
+└── Organizational Units (OUs)
+    ├── Infrastructure
+    │   ├── Servers (OU)
+    │   │   ├── Production Servers (OU)
+    │   │   └── Test/Development Servers (OU)
+    │   └── Shared Assets (OU)
+    │       ├── Printers (Container)
+    │       └── Service Accounts (Container)
+    ├── Departments
+    │   ├── IT Services (OU)
+    │   │   ├── IT Support (OU)
+    │   │   ├── Network Operations (OU)
+    │   │   ├── Users (Container)
+    │   │   └── Computers (Container)
+    │   ├── Finance (OU)
+    │   │   ├── Users (Container)
+    │   │   └── Computers (Container)
+    │   └── Sales & Marketing (OU)
+    │       ├── Users (Container)
+    │       └── Computers (Container)
+    └── USA (Geographical OU)
+        ├── HQ - Atlanta (OU)
+        └── West Coast Offices (OU)
 ```
 
 # Active Directory Key Terms
