@@ -382,6 +382,13 @@ The group scope defines where a group can be used to grant permissions (domain r
 | Global | Any domain in the forest (to grant access to resources). | Only the domain where it was created. | Local Domain | Often contains users and other Global Groups from the same domain. |
 | Universal | Any object in the entire forest. | Any domain in the forest. | Global Catalog (GC) | Changes trigger forest-wide replication, so it's best practice to contain Global Groups, not individual users. |
 
+Group scopes can be changed, but there are a few caveats:
+
+- **Global → Universal:** A Global Group can only be converted to a Universal Group if it is NOT a member of any other Global Group.
+- **Domain Local → Universal:** A Domain Local Group can only be converted to a Universal Group if it does NOT contain any other Domain Local Groups as members.
+- **Universal → Domain Local:** A Universal Group can be converted to a Domain Local Group without restrictions.
+- **Universal → Global:** A Universal Group can only be converted to a Global Group if it does NOT contain any other Universal Groups as members.
+
 ![alt text](image-9.png)
 
 ### Built-in Groups and Scope Examples
@@ -393,14 +400,6 @@ The group scope defines where a group can be used to grant permissions (domain r
 | Domain Users | Global | Default group for all user accounts in the domain. |
 | Schema Admins | Universal | Grants control over the AD Schema (forest-wide control). |
 | Enterprise Admins | Universal | Grants control over the entire AD forest (forest-wide control). |
-
-Group scopes can be changed, but there are a few caveats:
-Group scopes can be changed, but there are a few caveats:
-
-- **Global → Universal:** A Global Group can only be converted to a Universal Group if it is NOT a member of any other Global Group.
-- **Domain Local → Universal:** A Domain Local Group can only be converted to a Universal Group if it does NOT contain any other Domain Local Groups as members.
-- **Universal → Domain Local:** A Universal Group can be converted to a Domain Local Group without restrictions.
-- **Universal → Global:** A Universal Group can only be converted to a Global Group if it does NOT contain any other Universal Groups as members.
 
 
 ![alt text](image-8.png)
