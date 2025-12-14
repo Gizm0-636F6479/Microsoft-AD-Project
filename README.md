@@ -221,4 +221,76 @@ MSRPC provides interprocess communication for Windows services and AD management
 | netlogon | Background service used for authentication and Domain Controller location. |
 | samr | Remote SAM management (user/group info). Authenticated queries are allowed and can be used for reconnaissance. |
 | drsuapi | Directory Replication Service Remote Protocol — used for replication. If improperly secured, attackers can abuse replication to exfiltrate AD data (NTDS.dit). |
+ 
+## NTLM Authentication and Password Hashes
+
+Active Directory supports several hash and protocol versions, with NTLM being the most common alternative to Kerberos. It is crucial to distinguish between the Hash (the stored credential derivative) and the Protocol (the challenge/response authentication method).
+
+### Hash/Protocol Comparison
+
+| Hash/Protocol | Cryptographic Technique | Mutual Authentication | Message Type | Trusted Third Party |
+| --- | --- | ---: | --- | --- |
+| NTLM | Symmetric key cryptography | No | Random number | Domain Controller |
+| NTLMv1 | Symmetric key cryptography | No | MD4 hash, random number | Domain Controller |
+| NTLMv2 | Symmetric key cryptography | No | MD4 hash, random number | Domain Controller |
+| Kerberos | Symmetric & asymmetric cryptography | Yes | Encrypted ticket using DES, MD5 | Domain Controller / KDC |
+
+### 1. LM Hash (LAN Manager)
+
+- Age/Status: Oldest storage mechanism, defaulted to off since Windows Vista / Server 2008 due to severe security weaknesses.
+- Storage: Stored in the SAM database (local host) or the NTDS.DIT database (Domain Controller).
+- Weaknesses:
+    - Passwords are not case-sensitive and are converted to uppercase.
+    - Limited to a maximum of 14 characters.
+    - The password is split into two 7-character chunks, allowing an attacker to brute force the shorter chunks separately.
+    - It does not use a salt.
+Example Format:
+```
+299bd128c1101fd6
+```
+
+### 2. NTHash (NTLM Hash) and Protocol
+
+The NTHash is the modern password hash used on Windows systems and is utilized within the NTLM authentication protocol (a challenge–response system).
+
+- Hash Algorithm: MD4 of the little-endian UTF-16 value of the password: `MD4(UTF-16-LE(password))`.
+- Strengths: Supports the entire Unicode character set.
+- Weaknesses:
+    - Does not use a salt.
+    - Vulnerable to Pass-the-Hash (PtH) attacks, where an attacker can authenticate using only the hash without the cleartext password.
+    - Susceptible to offline brute-force and dictionary attacks for short/weak passwords.
+
+NTLM Authentication Flow: Three messages — `NEGOTIATE_MESSAGE` (Client→Server), `CHALLENGE_MESSAGE` (Server→Client), `AUTHENTICATE_MESSAGE` (Client→Server).
+
+Example Full NTLM Hash Breakdown:
+
+```
+Rachel:500:aad3c435b514a4eeaad3b935b51304fe:e46b9e548fa0d122de7f59fb6d48eaa2:::
+```
+
+- `Rachel` is the username.
+- `500` is the RID (Relative Identifier).
+- `aad3c435...` is the LM hash (often disabled/zeroed).
+- `e46b9e54...` is the NT hash.
+
+### 3. NTLM Protocol Versions (Net-NTLM)
+
+NTLMv1 and NTLMv2 are network authentication protocols that use the NT hash and a challenge/response mechanism to generate a Net-NTLM response. These are not the same as Pass-the-Hash usage.
+
+| Protocol | Version / Notes | Key Difference / Strength | Hash Example |
+| --- | --- | --- | --- |
+| NTLMv1 | Older | Used both LM and NT hashes, easier to crack offline after capture. Response is a 24-byte hash based on an 8-byte server challenge. | `u4-netntlm::kNS:338d08f8e26de933...:cb8086049ec4736c` |
+| NTLMv2 | Default since Windows 2000 | Stronger; sends two responses and incorporates client challenge, timestamp, and domain into HMAC-MD5, making offline cracking harder. | `admin::N46iSNekpT:08ca45b7d7ea58ee...5c783030` |
+
+### 4. Domain Cached Credentials (DCC / MSCache2)
+
+- Purpose: Allows users to log on to a domain-joined host when Domain Controllers are unavailable.
+- Storage: Last successful domain user password hashes are saved in the host registry at `HKEY_LOCAL_MACHINE\SECURITY\Cache`.
+- Attack relevance: These hashes are not usable for Pass-the-Hash attacks and are slow to crack due to the MSCache2 algorithm; attackers only target them after obtaining local admin access.
+Example Format:
+
+```
+$DCC2$10240#bjones#e4e938d12fe5974dc42a90120bd9c90f
+```
+
 
