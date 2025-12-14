@@ -339,6 +339,8 @@ These attributes uniquely identify and help manage user objects in Active Direct
 | objectSID | The user's Security Identifier used during security checks. | S-1-5-21-3842939050-3880317879...-1111 |
 | sIDHistory | Contains previous SIDs for the user object (used during migrations). | List of old SIDs |
 
+![alt text](image-6.png)
+
 ### 5. Machine Accounts (Domain-Joined vs. Workgroup)
 
 Computers are security principals themselves; their configuration determines management scope and access.
