@@ -289,6 +289,7 @@ NTLMv1 and NTLMv2 are network authentication protocols that use the NT hash and 
 - Purpose: Allows users to log on to a domain-joined host when Domain Controllers are unavailable.
 - Storage: Last successful domain user password hashes are saved in the host registry at `HKEY_LOCAL_MACHINE\SECURITY\Cache`.
 - Attack relevance: These hashes are not usable for Pass-the-Hash attacks and are slow to crack due to the MSCache2 algorithm; attackers only target them after obtaining local admin access.
+
 Example Format:
 
 ```
