@@ -394,6 +394,15 @@ The group scope defines where a group can be used to grant permissions (domain r
 | Schema Admins | Universal | Grants control over the AD Schema (forest-wide control). |
 | Enterprise Admins | Universal | Grants control over the entire AD forest (forest-wide control). |
 
+Group scopes can be changed, but there are a few caveats:
+Group scopes can be changed, but there are a few caveats:
+
+- **Global → Universal:** A Global Group can only be converted to a Universal Group if it is NOT a member of any other Global Group.
+- **Domain Local → Universal:** A Domain Local Group can only be converted to a Universal Group if it does NOT contain any other Domain Local Groups as members.
+- **Universal → Domain Local:** A Universal Group can be converted to a Domain Local Group without restrictions.
+- **Universal → Global:** A Universal Group can only be converted to a Global Group if it does NOT contain any other Universal Groups as members.
+
+
 ![alt text](image-8.png)
 
 ### 3. Nested Group Membership
