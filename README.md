@@ -296,4 +296,58 @@ Example Format:
 $DCC2$10240#bjones#e4e938d12fe5974dc42a90120bd9c90f
 ```
 
+## User and Machine Accounts in Active Directory
+
+### 1. Account Fundamentals
+
+| Concept | Description |
+| --- | --- |
+| User Account | Created for a person or a service/program. Used to log on to a computer and access resources based on assigned rights and group membership. |
+| Access Token | Created when a user logs in. Describes the user's security context (identity, group membership) and is presented whenever the user interacts with a process or requests a resource. |
+| Group Membership | Simplifies administration. Privileges are assigned once to a group, and all members inherit those rights. |
+| Service Account | User accounts provisioned to run a specific application or service in the background, often requiring elevated privileges. |
+| Disabled Accounts | Accounts for former employees often deactivated (but not deleted) and retained for audit or record-keeping purposes. |
+
+### 2. Local Accounts (Non-Domain)
+
+Local accounts are stored locally on a specific server or workstation. Rights assigned to these accounts are only valid on that host.
+
+| Account Name | Security Identifier (SID) | Description and Permissions |
+| --- | --- | --- |
+| Administrator | S-1-5-domain-500 | First account created; has full control over the host. Can be disabled or renamed, but not deleted or locked in the SAM. |
+| Guest | N/A | Disabled by default. Intended for temporary, limited-access logins. |
+| SYSTEM | NT AUTHORITY\\SYSTEM | The highest permission level on a Windows host. Used by the OS for internal functions. Has Full Control over files and processes; does not have a normal user profile. |
+| Network Service | N/A | Predefined account for running Windows services. Presents machine credentials to remote services. |
+| Local Service | N/A | Predefined account for running Windows services. Presents anonymous/limited credentials to the network. |
+
+### 3. Domain User Accounts
+
+Domain user accounts are centrally managed by Active Directory and are granted rights by the domain. They can log in to any host joined to the domain.
+
+- **Standard Domain User:** Can log into any domain-joined host and has read access to much of the environment by default.
+- **KRBTGT Account:** A special service account used by the KDC to sign/encrypt Kerberos tickets. Common target for high-impact attacks (for example, Golden Ticket forgery) if its credentials are compromised.
+
+### 4. Key User Naming Attributes
+
+These attributes uniquely identify and help manage user objects in Active Directory.
+
+| Attribute Name | Description | Example Value |
+| --- | --- | --- |
+| UserPrincipalName (UPN) | The user's primary logon name, typically formatted like an email address. | htb-student@INLANEFREIGHT.LOCAL |
+| sAMAccountName | The pre-Windows 2000 logon name used for compatibility. | htb-student |
+| ObjectGUID | A unique identifier for the user object; does not change when moved/renamed. | aa799587-c641-4c23-a2f7-75850b4dd7e3 |
+| objectSID | The user's Security Identifier used during security checks. | S-1-5-21-3842939050-3880317879...-1111 |
+| sIDHistory | Contains previous SIDs for the user object (used during migrations). | List of old SIDs |
+
+### 5. Machine Accounts (Domain-Joined vs. Workgroup)
+
+Computers are security principals themselves; their configuration determines management scope and access.
+
+| Type of Machine | Management / Policy | User Access Benefits |
+| --- | --- | --- |
+| Domain-Joined | Centrally managed by Domain Controllers via Group Policy. | A domain user can log in to any domain-joined host and access resources across the enterprise. |
+| Non-Domain-Joined (Workgroup) | Not managed by domain policies. Configuration changes are made locally. | User accounts exist only on the local host; profiles and settings are not migrated between machines. |
+
+**Security Note:** In an AD environment, a machine account (which operates with `NT AUTHORITY\\SYSTEM` on that host) can have broad local rights and often has read access to much of the domain. Compromise of a machine account or local admin access is a common attacker foothold.
+
 
