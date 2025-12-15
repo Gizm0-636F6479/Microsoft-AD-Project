@@ -584,3 +584,5 @@ Administrators can use three options to manually control or override the default
     - Modify User Rights Assignment to grant a controlled user powerful privileges (for example, `SeDebugPrivilege`).
 - **Analysis / Detection:** Use tools like BloodHound to identify attack paths that allow low-privileged users to modify impactful GPOs via nested group membership or delegated rights.
 
+![alt text](images/image-10.png)
+
