@@ -530,4 +530,57 @@ Effective logging is the foundation of detection and response.
 | Patch Management | WSUS or SCCM | Automate and ensure the timely deployment of critical security patches across all Windows systems to eliminate known vulnerabilities. |
 
 
+## Examining Group Policy in Active Directory
+
+Group Policy is a fundamental Windows feature that allows administrators to centrally manage and configure user settings, operating systems, and applications across a domain. It is vital for enforcing a consistent security posture.
+
+### 1. Group Policy Objects (GPOs)
+
+- **Group Policy Object (GPO):** A virtual collection of policy settings (for example: screen lock timeout, password policy, application restrictions) identified by a unique GUID.
+- **Application:** GPOs are linked to Sites, the Domain root, or Organizational Units (OUs) to control settings for targeted scopes.
+- **Security Risk:** GPOs are a major attack surface — if an attacker can modify a GPO that applies to privileged users or computers, they can enable lateral movement, privilege escalation, or persistence (for example, adding a local administrator or creating a malicious scheduled task).
+- **Default GPOs:** `Default Domain Policy` (linked to the Domain; manages domain-wide defaults such as password complexity) and `Default Domain Controllers Policy` (linked to the Domain Controllers OU; sets baseline security and auditing for DCs).
+
+### 2. GPO Processing and Order of Precedence
+
+GPOs are processed in a specific, hierarchical order, and the settings applied last take the highest precedence, meaning they can override settings applied earlier.
+
+| Level | Description | Precedence |
+| --- | --- | --- |
+| Local Group Policy | Defined on the host itself. | Lowest Precedence (Easily Overwritten) |
+| Site Policy | Policies specific to the Enterprise Site (e.g., location-specific access controls). | 2nd Lowest Precedence |
+| Domain-wide Policy | Policies applied to the entire domain (e.g., password policy, desktop background). | Middle Precedence |
+| Organizational Unit (OU) Policy | Settings specific to users/computers within a particular OU (e.g., role-specific software access). | High Precedence |
+| Nested OU Policy | Settings applied to OUs nested within other OUs. | Highest Precedence (Processed Last) |
+
+Note on Conflict: A setting configured in a Computer policy will always have a higher priority than the same setting applied in a User policy.
+
+### 3. GPO Precedence Control Mechanisms
+
+Administrators can use three options to manually control or override the default order of precedence:
+
+| Mechanism | Setting Location | Effect on Precedence |
+| --- | --- | --- |
+| Link Order | Applied when multiple GPOs are linked to the same OU. | The GPO with Link Order 1 (the lowest number) is processed last and has the highest precedence among linked GPOs. |
+| Enforced (Previously "No Override") | Set on the specific GPO link. | Policy settings in this GPO CANNOT be overridden by GPOs linked to lower-level OUs. It takes precedence over Block Inheritance. |
+| Block Inheritance | Set on the OU itself. | Prevents policies linked to higher-level containers (like the Domain or parent OUs) from being applied to this OU. |
+
+### 4. Group Policy Refresh Frequency
+
+- **GPO Refresh / Application:** When a GPO is modified or newly linked, settings are applied after the refresh interval rather than immediately.
+
+- **Default Refresh Interval:**
+    - Users and Computers: Every 90 minutes, plus a random offset of +/- 30 minutes (reduces DC load).
+    - Domain Controllers: Every 5 minutes.
+
+- **Manual Update:** Administrators can force immediate application using `gpupdate /force`.
+
+### 5. Security Attack Context
+
+- **Attack Vector:** Attacks typically aim to gain permissions to modify a GPO linked to a target OU.
+- **Common Goals:** Modify a GPO to perform high-impact actions such as:
+    - Add a controlled user to the local `Administrators` group on target machines.
+    - Create a Scheduled Task to establish persistence or deploy malware.
+    - Modify User Rights Assignment to grant a controlled user powerful privileges (for example, `SeDebugPrivilege`).
+- **Analysis / Detection:** Use tools like BloodHound to identify attack paths that allow low-privileged users to modify impactful GPOs via nested group membership or delegated rights.
 
