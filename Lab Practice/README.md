@@ -6,12 +6,12 @@ Our first task of the day includes adding a few new-hire users into AD. We are j
 
 ### USERS TO ADD:
 **User:**
-Andromeda Cepheus
-Orion Starchaser
-Artemis Callisto
+    - Andromeda Cepheus
+    - Orion Starchaser
+    - Artemis Callisto
 
 **Attribute:**
-full name
-email (first-initial.lastname@inlanefreight.local) ( ex. j.smith@inlanefreight.local )
-display name
-User must change password at next logon
+    - full name
+    - email (first-initial.lastname@inlanefreight.local) ( ex. j.smith@inlanefreight.local )
+    - display name
+    - User must change password at next logon
