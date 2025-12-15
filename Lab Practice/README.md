@@ -4,14 +4,14 @@ Attempt to complete the challenges on your own. If you get stuck, the Solutions 
 ### TASK 1: MANAGE USERS
 Our first task of the day includes adding a few new-hire users into AD. We are just going to create them under the "inlanefreight.local" scope, drilling down into the "Corp > Employees > HQ-NYC > IT " folder structure for now. Once we create our other groups, we will move them into the new folders. You can utilize the Active Directory PowerShell module (New-ADUser), the Active Directory Users and Computers snap-in, or MMC to perform these actions.
 
-### USERS TO ADD:
+### USERS TO ADD
 **User:**
-    - Andromeda Cepheus
-    - Orion Starchaser
-    - Artemis Callisto
+- Andromeda Cepheus
+- Orion Starchaser
+- Artemis Callisto
 
-**Attribute:**
-    - full name
-    - email (first-initial.lastname@inlanefreight.local) ( ex. j.smith@inlanefreight.local )
-    - display name
-    - User must change password at next logon
+**Attributes:**
+- full name
+- email (first-initial.lastname@inlanefreight.local) ( ex. j.smith@inlanefreight.local )
+- display name
+- User must change password at next logon
