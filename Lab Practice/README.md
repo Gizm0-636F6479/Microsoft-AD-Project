@@ -8,3 +8,9 @@ Active Directory (AD) is a centralized management system that acts as a digital 
     - **A Host Computer:** Ideally with at least 16GB of RAM (8GB can work but will be slow).
     - **Hypervisor:** Download Oracle VirtualBox or VMware Workstation Player (both free).
     - **Windows Server ISO:** Download the Windows Server 2022 Evaluation (free for 180 days)
+
+TODO: Create Steps for set-up
+
+## Creating Organizational Units (OU) GUI
+1. Navigate to the "Active Directory Users and Computers" GUI
+![alt text](image-1.png)
