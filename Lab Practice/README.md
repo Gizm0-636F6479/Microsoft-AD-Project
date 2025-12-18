@@ -1,17 +1,10 @@
-### TASKS:
-Attempt to complete the challenges on your own. If you get stuck, the Solutions dropdown below each task can help you. This reference on the Active Directory PowerShell module will be extremely helpful. As an introductory course on AD, we do not expect you to know everything about the topic and how to administer it. The Solutions below each task offer a step-by-step of how to complete the task. This section is provided to give you a taste of the daily tasks that AD administrators perform. Instead of providing the information to you in a static format, we have opted to provide it in a more hands-on manner.
+![alt text](image.png)
+### What is Active Directory
+Active Directory (AD) is a centralized management system that acts as a digital "phonebook" and security guard for a company's network. It stores information about users, computers, and printers in a single database, allowing IT administrators to manage everyone’s access from one location. When you log in at work, AD verifies your identity and ensures you have the correct permissions to access specific files or software. By using tools like Group Policy, admins can automatically apply security rules or updates to thousands of computers at once, making it the backbone of security and organization for most modern businesses.
 
-### TASK 1: MANAGE USERS
-Our first task of the day includes adding a few new-hire users into AD. We are just going to create them under the "inlanefreight.local" scope, drilling down into the "Corp > Employees > HQ-NYC > IT " folder structure for now. Once we create our other groups, we will move them into the new folders. You can utilize the Active Directory PowerShell module (New-ADUser), the Active Directory Users and Computers snap-in, or MMC to perform these actions.
+### Setting up Active Directory (AD)
 
-### USERS TO ADD
-**User:**
-- Andromeda Cepheus
-- Orion Starchaser
-- Artemis Callisto
-
-**Attributes:**
-- full name
-- email (first-initial.lastname@inlanefreight.local) ( ex. j.smith@inlanefreight.local )
-- display name
-- User must change password at next logon
+- **Prerequisites**:
+    - **A Host Computer:** Ideally with at least 16GB of RAM (8GB can work but will be slow).
+    - **Hypervisor:** Download Oracle VirtualBox or VMware Workstation Player (both free).
+    - **Windows Server ISO:** Download the Windows Server 2022 Evaluation (free for 180 days)
