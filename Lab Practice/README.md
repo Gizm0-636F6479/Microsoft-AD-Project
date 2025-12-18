@@ -14,3 +14,5 @@ TODO: Create Steps for set-up
 ## Creating Organizational Units (OU) GUI
 1. Navigate to the "Active Directory Users and Computers" GUI
 ![alt text](image-1.png)
+2. Click the domain you're adding the OU to — in this case we click gizm0.local > New > Organizational Unit
+![alt text](image-2.png)
